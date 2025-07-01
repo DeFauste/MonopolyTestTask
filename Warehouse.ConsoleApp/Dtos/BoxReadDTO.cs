@@ -14,7 +14,7 @@
 
         public override string ToString()
         {
-            return $"ID: {ID}, Width: {Width}, Height: {Height}, Depth: {Depth}, Weight: {Weight}, ProductionDate:  {ProductionDate}, ExpirationDate: {ExpirationDate}, PalleteId: {PalleteId}";
+            return $"ID: {ID}, Width: {Width}, Height: {Height}, Depth: {Depth}, Weight: {Weight}, ProductionDate:  {ProductionDate}, ExpirationDate: {ExpirationDate}, PalleteId: {PalleteId}, Volume: {Volume}";
         }
     }
 }

@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Warehouse.ConsoleApp.Dtos;
 using Warehouse.ConsoleApp.Utils;
 using Warehouse.Database.InMemory.Entities;
@@ -16,7 +11,7 @@ namespace Warehouse.ConsoleApp.Services
         private readonly IBoxRepository _boxRepository;
         private readonly IPalleteRepository _palleteRepository;
         private readonly IMapper _mapper;
-        public BoxServices(IBoxRepository boxRepository,IPalleteRepository palleteRepository, IMapper mapper)
+        public BoxServices(IBoxRepository boxRepository, IPalleteRepository palleteRepository, IMapper mapper)
         {
             _boxRepository = boxRepository;
             _palleteRepository = palleteRepository;
@@ -43,7 +38,6 @@ namespace Warehouse.ConsoleApp.Services
 
             entityPallete.Weight += boxDto.Weight;
             entityPallete.UpdatekExpirationDate(boxDto.ExpirationDate.Value);
-            Console.WriteLine(entityPallete.ExpirationDate.Value);
             _palleteRepository.Update(entityPallete, entityPallete);
             _palleteRepository.SaveChange();
 

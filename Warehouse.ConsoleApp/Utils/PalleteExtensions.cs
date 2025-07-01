@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Warehouse.ConsoleApp.Dtos;
+﻿using Warehouse.ConsoleApp.Dtos;
 using Warehouse.Database.InMemory.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Warehouse.ConsoleApp.Utils
 {
@@ -13,7 +7,7 @@ namespace Warehouse.ConsoleApp.Utils
     {
         public static bool CheckCapacity(this PalletEntity pallete, BoxCreateDTO boxDto)
         {
-            if(pallete == null)
+            if (pallete == null)
             {
                 throw new ArgumentNullException(nameof(pallete));
             }
@@ -23,9 +17,9 @@ namespace Warehouse.ConsoleApp.Utils
             }
 
 
-            if(pallete.Width < boxDto.Width || pallete.Depth < boxDto.Depth)
+            if (pallete.Width < boxDto.Width || pallete.Depth < boxDto.Depth)
             {
-               return false;
+                return false;
             }
 
             return true;
@@ -33,7 +27,7 @@ namespace Warehouse.ConsoleApp.Utils
 
         public static void UpdatekExpirationDate(this PalletEntity palletEntity, DateOnly dateExpiration)
         {
-            if(palletEntity == null)
+            if (palletEntity == null)
             {
                 throw new ArgumentNullException(nameof(palletEntity));
             }

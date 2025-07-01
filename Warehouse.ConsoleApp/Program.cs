@@ -23,22 +23,28 @@ internal class Program
 
             var preparatoryDatabase = new PrepDb(boxService, palleteService);
 
-            var listPallete = palleteService.GetAll();
-            foreach (var item in listPallete)
+
+            Console.WriteLine("Display groups of pallets sorted by Date\n");
+            var groupesPallete = palleteService.GroupPalletsByExpirationDate();
+            foreach (var groupe in groupesPallete)
             {
-                Console.WriteLine($"Pallete - {item.ID}");
-                foreach (var p in item.Boxes)
+                Console.WriteLine($"Expiration Date:{groupe.ExpirationDate}");
+                foreach (var pallete in groupe.Pallets)
                 {
-                    Console.WriteLine(p.ToString());
+                    Console.WriteLine($"Pallete ( {pallete} )");
                 }
+                Console.WriteLine();
             }
 
+            Console.WriteLine("--------------------------------------------------------");
 
-            var listBox = boxService.GetAll();
-            foreach (var item in listBox)
+            Console.WriteLine("Display 3 pallets that contain the boxes with the longest shelf life, sorted by increasing volume\n");
+            var topThreePallets = palleteService.GetTopThreePalletsWithBigVolume();
+            foreach (var pallets in topThreePallets)
             {
-                Console.WriteLine(item);
+                Console.WriteLine(pallets);
             }
+
 
         }
     }

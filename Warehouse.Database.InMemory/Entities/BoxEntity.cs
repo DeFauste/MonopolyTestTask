@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Warehouse.Database.InMemory.Entities
 {
@@ -14,7 +14,7 @@ namespace Warehouse.Database.InMemory.Entities
         public double Weight { get; set; }
         public DateOnly ProductionDate { get; set; }
         public DateOnly ExpirationDate { get; set; }
-        public int PalleteId {  get; set; }
+        public int PalleteId { get; set; }
         public PalletEntity Pallete { get; set; }
     }
 }

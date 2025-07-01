@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Warehouse.ConsoleApp.Dtos;
 using Warehouse.Database.InMemory.Entities;
 using Warehouse.Database.InMemory.Repositories;
@@ -38,8 +37,7 @@ namespace Warehouse.ConsoleApp.Services
             var listDto = _mapper.Map<IEnumerable<PalleteReadDTO>>(listEnity);
             return listDto;
         }
-
-        public void Update(int ID , PalleteCreateDTO dto)
+        public void Update(int ID, PalleteCreateDTO dto)
         {
             if (dto == null)
             {
@@ -47,13 +45,56 @@ namespace Warehouse.ConsoleApp.Services
             }
             var entity = _repository.GetById(ID);
 
-            if(entity == null)
+            if (entity == null)
             {
                 throw new ArgumentException($"The pallet with this {ID} was not found");
             }
             var entityForUpdate = _mapper.Map<PalletEntity>(dto);
             _repository.Update(entity, entityForUpdate);
             _repository.SaveChange();
+        }
+        public IEnumerable<PalletGroupDTO> GroupPalletsByExpirationDate()
+        {
+            var pallete = GetAll();
+            var groupePallete = pallete
+               .GroupBy(p => p.ExpirationDate)
+            .OrderBy(g => g.Key)
+            .Select(g => new PalletGroupDTO
+            {
+                ExpirationDate = g.Key,
+                Pallets = g.OrderBy(p => p.Weight).ToList()
+            })
+            .ToList();
+            return groupePallete;
+        }
+
+        public IEnumerable<PalleteReadDTO> GetTopThreePalletsWithBigVolume()
+        {
+            var pallets = GetAll();
+
+            var allBoxes = pallets
+                .SelectMany(p => p.Boxes.Select(b => new
+                {
+                    Box = b,
+                    PalleteId = p.ID,
+                    b.ExpirationDate
+                }));
+
+
+            var topBoxesExpirationDate = allBoxes
+                .GroupBy(x => x.PalleteId)
+                .Select(g => g.OrderByDescending(x => x.ExpirationDate).First())
+                .OrderByDescending(x => x.ExpirationDate)
+                .Take(3)
+                .Select(x => x.Box.PalleteId)
+                .ToList();
+
+            var topPallets = pallets
+                .Where(p => topBoxesExpirationDate.Contains(p.ID))
+                .OrderByDescending(x => x.Volume)
+                .ToList();
+
+            return topPallets;
         }
     }
 }

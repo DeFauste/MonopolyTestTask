@@ -6,7 +6,7 @@ namespace Warehouse.ConsoleApp.Utils
     {
         public static void CalculateDate(this BoxCreateDTO box, int daysBeforeExpiration)
         {
-            if(box == null)
+            if (box == null)
             {
                 throw new ArgumentNullException(nameof(box));
             }
@@ -14,12 +14,12 @@ namespace Warehouse.ConsoleApp.Utils
             {
                 throw new ArgumentException($"Specify the Expiration Date or Production Date");
             }
-            if(box.ProductionDate != null && box.ExpirationDate == null)
+            if (box.ProductionDate != null && box.ExpirationDate == null)
             {
                 var expirationDate = box.ProductionDate.Value.AddDays(daysBeforeExpiration);
                 box.ExpirationDate = expirationDate;
             }
-            if(box.ProductionDate == null && box.ExpirationDate != null)
+            if (box.ProductionDate == null && box.ExpirationDate != null)
             {
                 var expirationDate = box.ExpirationDate.Value.AddDays(-daysBeforeExpiration);
                 box.ProductionDate = expirationDate;

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Warehouse.ConsoleApp.Dtos
+﻿namespace Warehouse.ConsoleApp.Dtos
 {
     public class BoxCreateDTO
     {
