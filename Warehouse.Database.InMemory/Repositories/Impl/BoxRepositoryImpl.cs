@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Warehouse.Database.InMemory.Data;
 using Warehouse.Database.InMemory.Entities;
 
@@ -11,9 +6,9 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
 {
     public class BoxRepositoryImpl : IBoxRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbInMemoryContext _context;
 
-        public BoxRepositoryImpl(AppDbContext context)
+        public BoxRepositoryImpl(AppDbInMemoryContext context)
         {
             _context = context;
         }
@@ -38,6 +33,13 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
             return _context.Boxes.AsNoTracking().ToList();
         }
 
+        public BoxEntity GetById(int ID)
+        {
+            return _context.Boxes
+                .AsNoTracking()
+                .FirstOrDefault(c => c.ID == ID);
+        }
+
         public bool SaveChange()
         {
             return (_context.SaveChanges() >= 0);
@@ -53,16 +55,17 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
             {
                 throw new ArgumentNullException(nameof(data));
             }
-            _context.Boxes
-                .Where(e => e.ID == entity.ID)
-                .ExecuteUpdate(a => a
-                .SetProperty(x => x.Width, data.Width)
-                .SetProperty(x => x.Height, data.Height)
-                .SetProperty(x => x.Depth, data.Depth)
-                .SetProperty(x => x.Weight, data.Weight)
-                .SetProperty(x => x.ProductionDate, data.ProductionDate)
-                .SetProperty(x => x.ExpirationDate, data.ExpirationDate)
-                );
+            var boxe = _context.Boxes.FirstOrDefault(a => a.ID == entity.ID);
+            if (boxe == null)
+            {
+                throw new AbandonedMutexException(nameof(boxe));
+            }
+            boxe.Width = data.Width;
+            boxe.Height = data.Height;
+            boxe.Depth = data.Depth;
+            boxe.Weight = data.Weight;
+            boxe.ProductionDate = data.ProductionDate;
+            boxe.ExpirationDate = data.ExpirationDate;
         }
     }
 }

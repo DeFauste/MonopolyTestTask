@@ -15,6 +15,6 @@ namespace Warehouse.Database.InMemory.Entities
         public DateOnly ProductionDate { get; set; }
         public DateOnly ExpirationDate { get; set; }
         public int PalleteId {  get; set; }
-        public PalletEntity? Pallete { get; set; }
+        public PalletEntity Pallete { get; set; }
     }
 }

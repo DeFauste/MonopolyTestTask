@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Warehouse.Database.InMemory.Data;
 using Warehouse.Database.InMemory.Entities;
 
@@ -11,8 +6,8 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
 {
     public class PalleteRepositoryImpl : IPalleteRepository
     {
-        private readonly AppDbContext _context;
-        public PalleteRepositoryImpl(AppDbContext context) 
+        private readonly AppDbInMemoryContext _context;
+        public PalleteRepositoryImpl(AppDbInMemoryContext context) 
         {
             _context = context;
         }
@@ -37,6 +32,13 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
             return _context.Pallets.AsNoTracking().ToList();
         }
 
+        public PalletEntity GetById(int ID)
+        {
+            return _context.Pallets
+                .AsNoTracking()
+                .FirstOrDefault(c => c.ID == ID);
+        }
+
         public bool SaveChange()
         {
             return (_context.SaveChanges() >= 0);
@@ -52,15 +54,17 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
             {
                 throw new ArgumentNullException(nameof(data));
             }
-            _context.Pallets
-                .Where(e => e.ID == entity.ID)
-                .ExecuteUpdate(a => a
-                .SetProperty(x => x.Width, data.Width)
-                .SetProperty(x => x.Height, data.Height)
-                .SetProperty(x => x.Depth, data.Depth)
-                .SetProperty(x => x.Weight, data.Weight)
-                .SetProperty(x => x.ExpirationDate, data.ExpirationDate)
-                );
+
+            var pallete = _context.Pallets.FirstOrDefault(a => a.ID == entity.ID);
+            if (pallete == null)
+            {
+                throw new AbandonedMutexException(nameof(pallete));
+            }
+            pallete.Width = data.Width;
+            pallete.Height = data.Height;
+            pallete.Depth = data.Depth;
+            pallete.Weight = data.Weight;
+            pallete.ExpirationDate = data.ExpirationDate;
         }
     }
 }

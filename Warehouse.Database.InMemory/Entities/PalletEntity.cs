@@ -12,8 +12,8 @@ namespace Warehouse.Database.InMemory.Entities
         public double Height { get; set; }
         public double Depth { get; set; }
         public double Weight { get; set; }
-        public DateOnly ExpirationDate { get; set; }
-        List<BoxEntity>? Boxes { get; set; }
+        public DateOnly? ExpirationDate { get; set; } = null;
+        public List<BoxEntity> Boxes { get; set; } = new();
 
     }
 }
