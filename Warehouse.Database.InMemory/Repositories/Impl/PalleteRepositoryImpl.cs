@@ -29,14 +29,25 @@ namespace Warehouse.Database.InMemory.Repositories.Impl
 
         public IEnumerable<PalletEntity> GetAll()
         {
-            return _context.Pallets.AsNoTracking().ToList();
+            var pallets = _context.Pallets.AsNoTracking().ToList();
+            foreach (var pallet in pallets)
+            {
+                var boxes = _context.Boxes.AsNoTracking().Where(b => b.PalleteId == pallet.ID).ToList();   
+                pallet.Boxes = boxes;
+            }
+            return pallets;
         }
 
         public PalletEntity GetById(int ID)
         {
-            return _context.Pallets
+            var pallet = _context.Pallets
                 .AsNoTracking()
                 .FirstOrDefault(c => c.ID == ID);
+            if(pallet != null)
+            {
+                pallet.Boxes = _context.Boxes.AsNoTracking().Where(b => b.PalleteId == pallet.ID).ToList();
+            }
+            return pallet;
         }
 
         public bool SaveChange()
