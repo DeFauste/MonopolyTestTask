@@ -91,7 +91,7 @@ namespace Warehouse.ConsoleApp.Services
 
             var topPallets = pallets
                 .Where(p => topBoxesExpirationDate.Contains(p.ID))
-                .OrderByDescending(x => x.Volume)
+                .OrderBy(x => x.Volume)
                 .ToList();
 
             return topPallets;
